@@ -1,16 +1,21 @@
 import styled from "@emotion/styled";
 import KanBanBoard from "./components/KanBanBoard";
 
-const ViewPort = styled.div`
+const AppContainer = styled.div`
+  position: relative;
   width: 100vw;
   height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 `;
 
 const App = () => {
   return (
-    <ViewPort>
+    <AppContainer>
       <KanBanBoard />
-    </ViewPort>
+    </AppContainer>
   );
 };
 
