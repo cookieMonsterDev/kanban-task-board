@@ -1,14 +1,12 @@
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 import { update } from "../../store/boardSlice/boardSlice";
-import TaskEditor from "../TaskEditor";
+import TextEditor from "../TextEditor";
 import BoardColumn from "./BoardColumn";
 import { BlurOverlay, BoardContainer } from "./KanBanBoard.styled";
 
-import { Routes, Route } from "react-router";
-
 const KanBanBoard = () => {
-  const { columns } = useAppSelector((state) => state.board);
+  const { columns, dialogWindow } = useAppSelector((state) => state.board);
   const dispatch = useAppDispatch();
 
   const onDragEnd = ({ source, destination }: DropResult) => {
@@ -21,6 +19,9 @@ const KanBanBoard = () => {
 
   return (
     <>
+      <BlurOverlay visible={dialogWindow}>
+        <TextEditor />
+      </BlurOverlay>
       <BoardContainer>
         <DragDropContext onDragEnd={onDragEnd}>
           {columns.map((e) => {
@@ -28,16 +29,6 @@ const KanBanBoard = () => {
           })}
         </DragDropContext>
       </BoardContainer>
-      <Routes>
-        <Route
-          path="/:columnName/:id"
-          element={
-            <BlurOverlay>
-              <TaskEditor />
-            </BlurOverlay>
-          }
-        />
-      </Routes>
     </>
   );
 };

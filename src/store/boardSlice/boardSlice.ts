@@ -1,6 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { BoardState, Locations } from "./board.types";
+import {
+  BoardState,
+  TaskLocation,
+  TaskState,
+  UpdateLocations,
+} from "./board.types";
 
 const initialState: BoardState = {
   columns: [
@@ -48,19 +53,25 @@ const initialState: BoardState = {
       columnName: "Done",
       taskList: [],
     },
-  ]
+  ],
+  currentTask: {
+    id: "",
+    title: "",
+    content: "",
+    columnName: "",
+  },
+  dialogWindow: false,
 };
 
 export const boardSlice = createSlice({
   name: "board",
   initialState,
   reducers: {
-    update(state, { payload }: PayloadAction<Locations>) {
+    update(state, { payload }: PayloadAction<UpdateLocations>) {
       const { source, destination } = payload;
 
-      let task = state.columns.filter(
-        (e) => e.columnName === source.droppableId
-      )[0].taskList[source.index];
+      let task = state.columns.find((e) => e.columnName === source.droppableId)!
+        .taskList[source.index];
 
       const newColumns = state.columns
         .map((e) => {
@@ -78,21 +89,57 @@ export const boardSlice = createSlice({
 
       state.columns = newColumns;
     },
-    addTask(state) {
+    addTask(state, { payload }: PayloadAction<TaskState>) {
       state.columns.map((e) => {
         if (e.columnName === "Todo") {
           e.taskList.push({
-            id: crypto.randomUUID(),
-            title: "Something-test",
-            content: "test-test",
+            ...payload,
           });
         }
         return e;
       });
-    }
+
+      state.dialogWindow = false;
+    },
+    deleteTask(state, { payload }: PayloadAction<TaskLocation>) {
+      const { columnName, taskId } = payload;
+      const newColumns = current(state).columns.map((e) => {
+        if (e.columnName === columnName) {
+          const newTaskList = e.taskList.filter((e) => e.id !== taskId);
+          return { ...e, taskList: newTaskList };
+        }
+        return e;
+      });
+
+      state.columns = newColumns;
+      state.dialogWindow = false;
+    },
+    openWindowCreate(state) {
+      state.currentTask = { id: "", title: "", content: "", columnName: "" };
+      state.dialogWindow = true;
+    },
+    openWindowUpdate(state, { payload }: PayloadAction<TaskLocation>) {
+      const { columnName, taskId } = payload;
+      const task = current(state)
+        .columns.find((e) => e.columnName === columnName)!
+        .taskList.find((e) => e.id === taskId)!;
+
+      state.currentTask = { ...task, columnName };
+      state.dialogWindow = true;
+    },
+    closeWindow(state) {
+      state.dialogWindow = false;
+    },
   },
 });
 
-export const { update, addTask } = boardSlice.actions;
+export const {
+  update,
+  addTask,
+  deleteTask,
+  openWindowCreate,
+  openWindowUpdate,
+  closeWindow,
+} = boardSlice.actions;
 
 export default boardSlice.reducer;

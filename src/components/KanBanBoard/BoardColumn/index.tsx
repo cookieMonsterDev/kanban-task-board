@@ -9,10 +9,10 @@ import {
   Label,
   TaskList,
 } from "./BoardColumn.styled";
+import { openWindowCreate } from "../../../store/boardSlice/boardSlice";
 
 const BoardColumn = ({ columnName, taskList }: ColumnProps) => {
   const dispatch = useAppDispatch();
-
   return (
     <Droppable droppableId={columnName}>
       {(provided) => (
@@ -26,7 +26,9 @@ const BoardColumn = ({ columnName, taskList }: ColumnProps) => {
           </TaskList>
           {columnName === "Todo" && (
             <AddButtonContainer>
-              <AddCircleOutlineIcon />
+              <AddCircleOutlineIcon
+                onClick={() => dispatch(openWindowCreate())}
+              />
             </AddButtonContainer>
           )}
         </ColumnContainer>

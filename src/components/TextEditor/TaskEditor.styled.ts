@@ -37,14 +37,6 @@ export const ToolBar = styled.span`
     transition: 500ms;
 
     &:nth-of-type(1) {
-      color: #132f4c;
-
-      &:hover {
-        color: #349ae7;
-      }
-    }
-
-    &:nth-of-type(2) {
       color: red;
 
       &:hover {
@@ -52,7 +44,7 @@ export const ToolBar = styled.span`
       }
     }
 
-    &:nth-of-type(3) {
+    &:nth-of-type(2) {
       color: #9a9a9a;
 
       &:hover {
@@ -62,7 +54,27 @@ export const ToolBar = styled.span`
   }
 `;
 
+export const ButtonWrapper = styled.button`
+  cursor: pointer;
+  box-sizing: border-box;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+
+  > svg {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: #132f4c;
+
+      &:hover {
+        color: #349ae7;
+      }
+    }
+`
+
 export const TitleInput = styled.input`
+  width: 100%;
   border: 1px solid #ccc;
   border-color: #ccc #ccc transparent #ccc;
   box-sizing: border-box;

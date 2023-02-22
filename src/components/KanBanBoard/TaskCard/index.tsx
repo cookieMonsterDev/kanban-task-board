@@ -1,36 +1,30 @@
-import styled from "@emotion/styled";
 import { Draggable } from "react-beautiful-dnd";
-import { Link } from "react-router-dom";
-import { TaskState } from "../../../store/boardSlice/board.types";
+import { useAppDispatch } from "../../../hooks/storeHooks";
+import { openWindowUpdate } from "../../../store/boardSlice/boardSlice";
+import { Conrtainer, Title } from "./TaskCard.styled";
+import { TaskProps } from "./TaskCard.types";
 
-interface TaskNewProps {
-  columnName: string;
-  task: TaskState;
-  index: number;
-}
+const TaskCard = ({ index, columnName, task }: TaskProps) => {
+  const dispatch = useAppDispatch();
 
-const Conrtainer = styled.li`
-  width: 100%;
-  height: 50px;
-  background-color: #63e6e6;
-  margin-bottom: 5px;
-`;
+  const handleOpen = () =>
+    dispatch(openWindowUpdate({ columnName, taskId: task.id }));
 
-const TaskCard = ({ task, index, columnName }: TaskNewProps) => {
   return (
-    <Link to={`/${columnName}/${task.id}`}>
-    <Draggable draggableId={task.id} index={index}>
-      {(provided) => (
-        <Conrtainer
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
-          {task.title}
-        </Conrtainer>
-      )}
-    </Draggable>
-    </Link>
+    <>
+      <Draggable draggableId={task.id} index={index}>
+        {(provided) => (
+          <Conrtainer
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            onClick={handleOpen}
+          >
+            <Title>{task.title}</Title>
+          </Conrtainer>
+        )}
+      </Draggable>
+    </>
   );
 };
 

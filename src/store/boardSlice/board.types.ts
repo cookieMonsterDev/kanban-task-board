@@ -2,6 +2,8 @@ import { DraggableLocation } from "react-beautiful-dnd";
 
 export interface BoardState {
   columns: ColumnState[];
+  currentTask: CurrentTask;
+  dialogWindow: boolean;
 }
 
 export interface ColumnState {
@@ -15,7 +17,23 @@ export interface TaskState {
   content: string;
 }
 
-export interface Locations {
+export interface UpdateLocations {
   source: DraggableLocation;
   destination: DraggableLocation;
+}
+
+export interface CurrentTask extends TaskState {
+  columnName: string
+}
+
+////
+
+export interface UpdateLocations {
+  source: DraggableLocation;
+  destination: DraggableLocation;
+}
+
+export interface TaskLocation {
+  columnName: string;
+  taskId: string;
 }
