@@ -5,6 +5,7 @@ import {
   TaskLocation,
   TaskState,
   UpdateLocations,
+  UpdateTask,
 } from "./board.types";
 
 const initialState: BoardState = {
@@ -101,6 +102,25 @@ export const boardSlice = createSlice({
 
       state.dialogWindow = false;
     },
+    updateTask(state, { payload }: PayloadAction<UpdateTask>) {
+      const { location, task } = payload;
+
+      const newColumns = current(state).columns.map((e) => {
+        if (e.columnName === location.columnName) {
+          const newTaskList = e.taskList.map((e) => {
+            if (e.id === location.taskId) {
+              e = task;
+            }
+            return e;
+          });
+
+          return { ...e, taskList: newTaskList };
+        }
+        return e;
+      });
+
+      state.columns = newColumns;
+    },
     deleteTask(state, { payload }: PayloadAction<TaskLocation>) {
       const { columnName, taskId } = payload;
       const newColumns = current(state).columns.map((e) => {
@@ -140,6 +160,7 @@ export const {
   openWindowCreate,
   openWindowUpdate,
   closeWindow,
+  updateTask,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

@@ -37,3 +37,8 @@ export interface TaskLocation {
   columnName: string;
   taskId: string;
 }
+
+export interface UpdateTask {
+  task: TaskState;
+  location: TaskLocation;
+}

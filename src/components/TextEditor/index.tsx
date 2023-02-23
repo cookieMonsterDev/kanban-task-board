@@ -8,6 +8,7 @@ import {
   addTask,
   closeWindow,
   deleteTask,
+  updateTask,
 } from "../../store/boardSlice/boardSlice";
 import "react-quill/dist/quill.snow.css";
 import {
@@ -57,14 +58,24 @@ const TaskEditor = () => {
     },
     onSubmit: (values) => {
       if (id) {
-        console.log("update");
+        dispatch(
+          updateTask({
+            task: {
+              ...values,
+              id,
+            },
+            location: { columnName, taskId: id },
+          })
+        );
         return;
       }
 
-      dispatch(addTask({
-        ...values,
-        id: crypto.randomUUID()
-      }))
+      dispatch(
+        addTask({
+          ...values,
+          id: crypto.randomUUID(),
+        })
+      );
     },
   });
 
